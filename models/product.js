@@ -11,14 +11,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init({
     categoryId: {
-      allowNull: false,
-      defaultValue: 1,
       type: DataTypes.INTEGER,
       references: {
         model: 'Category',
         key: 'id'
       },
-      onDelete: 'SET DEFAULT',
+      onDelete: 'SET NULL',
       onUpdate: 'CASCADE'
     },
     name: {

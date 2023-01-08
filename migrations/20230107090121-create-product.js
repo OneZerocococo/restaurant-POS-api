@@ -10,11 +10,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       category_id: {
-        allowNull: false,
-        defaultValue: 1,
         type: Sequelize.INTEGER,
         references: { model: 'Categories', key: 'id' },
-        onDelete: 'SET DEFAULT',
+        onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
       },
       name: {
