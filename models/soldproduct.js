@@ -10,8 +10,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   SoldProduct.init({
-    orderId: DataTypes.INTEGER,
-    productId: DataTypes.INTEGER,
+    orderId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Order',
+        key: 'id'
+      }
+    },
+    productId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Product',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE'
+    },
     count: DataTypes.INTEGER
   }, {
     sequelize,
