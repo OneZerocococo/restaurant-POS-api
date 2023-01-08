@@ -5,12 +5,20 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     static associate (models) {
-      Order.hasMany(models.SoldProduct, { foreignKey: 'orderId' })
+      Order.hasMany(models.SoldProduct)
       Order.belongsTo(models.Table, { foreignKey: 'tableId' })
     }
   }
   Order.init({
-    tableId: DataTypes.INTEGER,
+    tableId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Table',
+        key: 'id'
+      },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE'
+    },
     adultNum: DataTypes.INTEGER,
     childrenNum: DataTypes.INTEGER,
     totalPrice: DataTypes.INTEGER,

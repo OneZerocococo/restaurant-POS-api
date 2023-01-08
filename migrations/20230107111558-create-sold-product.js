@@ -15,7 +15,8 @@ module.exports = {
       },
       product_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'Products', key: 'id' }
+        references: { model: 'Products', key: 'id' },
+        onUpdate: 'CASCADE'
       },
       count: {
         type: Sequelize.INTEGER

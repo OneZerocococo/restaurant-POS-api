@@ -11,7 +11,9 @@ module.exports = {
       },
       table_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'Tables', key: 'id' }
+        references: { model: 'Tables', key: 'id' },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
       },
       adult_num: {
         type: Sequelize.INTEGER

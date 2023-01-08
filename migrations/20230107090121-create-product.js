@@ -13,7 +13,9 @@ module.exports = {
         allowNull: false,
         defaultValue: 1,
         type: Sequelize.INTEGER,
-        references: { model: 'Categories', key: 'id' }
+        references: { model: 'Categories', key: 'id' },
+        onDelete: 'SET DEFAULT',
+        onUpdate: 'CASCADE'
       },
       name: {
         allowNull: false,
