@@ -34,6 +34,20 @@ const categoryController = {
     } catch (err) {
       next(err)
     }
+  },
+  editCategory: async (req, res, next) => {
+    try {
+      const categoryId = req.params.id
+      const { name } = req.body
+      if (!name.trim()) throw new Error('內容不可空白')
+      const category = await Category.findByPk(categoryId)
+      if (!category) throw new Error('分類不存在')
+      const editedCategory = await category.update({ name })
+      const categorydata = editedCategory.toJSON()
+      res.status(200).json(categorydata)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
