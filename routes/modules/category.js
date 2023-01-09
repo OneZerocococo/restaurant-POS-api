@@ -9,6 +9,8 @@ router.post('/', authenticated, categoryController.addCategory)
 router.put('/:id', authenticated, categoryController.editCategory)
 // 刪除一個類別
 router.delete('/:id', authenticated, categoryController.deleteCategory)
+// 取得單一類別的所有商品
+router.get('/:id', categoryController.getCategory)
 // 取得所有類別
 router.get('/', categoryController.getCategories)
 

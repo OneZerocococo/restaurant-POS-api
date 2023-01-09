@@ -1,4 +1,4 @@
-const { Category } = require('../models')
+const { Category, Product } = require('../models')
 
 const categoryController = {
   getCategories: async (req, res, next) => {
@@ -45,6 +45,36 @@ const categoryController = {
       const editedCategory = await category.update({ name })
       const categorydata = editedCategory.toJSON()
       res.status(200).json(categorydata)
+    } catch (err) {
+      next(err)
+    }
+  },
+  getCategory: async (req, res, next) => {
+    try {
+      const categoryId = req.params.id
+      const category = await Category.findByPk(categoryId)
+      if (!category && categoryId !== '0') throw new Error('分類不存在')
+      // 取得有分類的商品
+      if (categoryId !== '0') {
+        const classifiedProducts = await Product.findAll({
+          where: { categoryId },
+          attributes: {
+            exclude: ['cost', 'createdAt', 'updatedAt']
+          },
+          raw: true
+        })
+        res.status(200).json(classifiedProducts)
+        // 取得未分類商品
+      } else {
+        const products = await Product.findAll({
+          where: { categoryId: null },
+          attributes: {
+            exclude: ['cost', 'createdAt', 'updatedAt']
+          },
+          raw: true
+        })
+        res.status(200).json(products)
+      }
     } catch (err) {
       next(err)
     }
