@@ -5,7 +5,6 @@ const faker = require('faker')
 module.exports = {
   async up (queryInterface, Sequelize) {
     const seedProducts = Array.from({ length: 10 }, (_, i) => ({
-      category_id: Math.floor(Math.random() * 3 + 1),
       name: `餐點${i + 1}`,
       name_en: `Product${i + 1}`,
       description: faker.lorem.paragraph().substring(0, 20),
