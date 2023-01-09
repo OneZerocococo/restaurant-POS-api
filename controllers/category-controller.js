@@ -23,6 +23,17 @@ const categoryController = {
     } catch (err) {
       next(err)
     }
+  },
+  deleteCategory: async (req, res, next) => {
+    try {
+      const categoryId = req.params.id
+      const category = await Category.findByPk(categoryId, { raw: true })
+      if (!category) throw new Error('分類不存在')
+      await Category.destroy({ where: { id: categoryId } })
+      res.status(200).json(category)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
