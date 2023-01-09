@@ -13,6 +13,16 @@ const categoryController = {
     } catch (err) {
       next(err)
     }
+  },
+  addCategory: async (req, res, next) => {
+    try {
+      const { name } = req.body
+      if (!name.trim()) throw new Error('內容不可空白')
+      const data = await Category.create({ name })
+      res.status(200).json(data)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
