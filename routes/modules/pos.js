@@ -14,7 +14,7 @@ router.put('/products/:id', authenticated, upload.fields([{ name: 'image', maxCo
 // 取得所有桌號
 router.get('/tables', authenticated, posController.getTables)
 // 編輯基本設定
-router.post('/settings', authenticated, posController.editSettings)
+router.put('/settings', authenticated, posController.editSettings)
 // 取得基本設定
 router.get('/settings', authenticated, posController.getSettings)
 
