@@ -11,4 +11,7 @@ router.post('/login', posController.login)
 router.post('/products', authenticated, upload.fields([{ name: 'image', maxCount: 1 }]), productController.createProduct)
 // 編輯一個餐點品項
 router.put('/products/:id', authenticated, upload.fields([{ name: 'image', maxCount: 1 }]), productController.editProduct)
+// 取得所有桌號
+router.get('/tables', authenticated, posController.getTables)
+
 module.exports = router
