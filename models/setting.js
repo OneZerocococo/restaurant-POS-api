@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Setting.init({
-    mincharge: {
+    minCharge: {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { User, Table } = require('../models')
+const { User, Table, Setting } = require('../models')
 
 const posController = {
   // 登入POS系統
@@ -31,6 +31,37 @@ const posController = {
         raw: true
       })
       res.status(200).json(tables)
+    } catch (err) {
+      next(err)
+    }
+  },
+  // 取得基本設定
+  getSettings: async (req, res, next) => {
+    try {
+      const settings = await Setting.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        raw: true
+      })
+      res.status(200).json(settings)
+    } catch (err) {
+      next(err)
+    }
+  },
+  // 編輯基本設定
+  editSettings: async (req, res, next) => {
+    try {
+      const { minCharge, description } = req.body
+      const settings = await Setting.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        raw: true
+      })
+      const newSettings = await Setting.findByPk(settings.id)
+      const newSettingsData = await newSettings.update({ minCharge, description })
+      res.status(200).json(newSettingsData)
     } catch (err) {
       next(err)
     }
