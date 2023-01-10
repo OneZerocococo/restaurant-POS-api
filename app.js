@@ -10,7 +10,7 @@ const methodOverride = require('method-override')
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(cors({ origin: [`http://localhost:${port}`, process.env.FRONTEND_ORIGIN] }))
+app.use(cors({ origin: ['http://localhost:3000', process.env.FRONTEND_ORIGIN] }))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride('_method'))
