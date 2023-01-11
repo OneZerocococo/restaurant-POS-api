@@ -3,6 +3,7 @@ const router = express.Router()
 const posController = require('../../controllers/pos-controller')
 const tableController = require('../../controllers/table-controller')
 const productController = require('../../controllers/product-controller')
+const orderController = require('../../controllers/order-controller')
 const { authenticated } = require('../../middleware/auth')
 const upload = require('../../middleware/multer')
 
@@ -16,6 +17,8 @@ router.put('/products/:id', authenticated, upload.fields([{ name: 'image', maxCo
 router.put('/tables/:id', authenticated, tableController.editTable)
 // 取得所有桌號
 router.get('/tables', authenticated, tableController.getTables)
+// 開桌設定人數
+router.post('/orders/:table_id', authenticated, orderController.setOrder)
 // 編輯基本設定
 router.put('/settings', authenticated, posController.editSettings)
 // 取得基本設定
