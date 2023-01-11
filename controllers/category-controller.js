@@ -58,10 +58,12 @@ const categoryController = {
       if (categoryId !== '0') {
         const classifiedProducts = await Product.findAll({
           where: { categoryId },
+          include: [Category],
           attributes: {
             exclude: ['cost', 'createdAt', 'updatedAt']
           },
-          raw: true
+          raw: true,
+          nest: true
         })
         res.status(200).json(classifiedProducts)
         // 取得未分類商品
