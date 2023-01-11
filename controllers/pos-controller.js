@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { User, Table, Setting } = require('../models')
+const { User, Setting } = require('../models')
 
 const posController = {
   // 登入POS系統
@@ -17,20 +17,6 @@ const posController = {
       delete userData.password
       const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '14d' })
       res.status(200).json({ token, user: userData })
-    } catch (err) {
-      next(err)
-    }
-  },
-  // POS取得所有桌號
-  getTables: async (req, res, next) => {
-    try {
-      const tables = await Table.findAll({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        raw: true
-      })
-      res.status(200).json(tables)
     } catch (err) {
       next(err)
     }
