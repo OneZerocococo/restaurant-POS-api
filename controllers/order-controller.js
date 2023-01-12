@@ -41,7 +41,10 @@ const orderController = {
         { totalPrice },
         { where: { id: order.id } }
       )
-      const updateData = await Order.findByPk(order.id, { raw: true })
+      const updateData = await Order.findByPk(order.id, {
+        attributes: { exclude: ['TableId'] },
+        raw: true
+      })
       res.status(200).json(updateData)
     } catch (err) {
       next(err)
