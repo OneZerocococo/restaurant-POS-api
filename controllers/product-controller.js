@@ -28,19 +28,20 @@ const productController = {
   // 編輯一個商品
   editProduct: async (req, res, next) => {
     try {
+      const product = await Product.findByPk(req.params.id)
+      if (!product) throw new Error('無此商品!')
       const { categoryId, name, nameEn, description, cost, price } = req.body
       if (!name || !price) throw new Error('請輸入名稱和價格!')
       const { files } = req
       if (description?.length > 100 || nameEn?.length > 100) throw new Error('請輸入100字以內')
       if (!name || name.length > 20) throw new Error('請輸入20字以內')
       const image = await imgurFileHandler(files?.image && files.image[0])
-      const product = await Product.findByPk(req.params.id)
       const updatedProduct = await product.update({
         categoryId,
         name,
         nameEn,
         description,
-        image,
+        image: image || product.image,
         cost,
         price
       })
