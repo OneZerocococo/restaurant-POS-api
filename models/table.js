@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Table extends Model {
     static associate (models) {
-      Table.hasMany(models.Order)
+      Table.hasMany(models.Order, { foreignKey: 'tableId' })
     }
   }
   Table.init({

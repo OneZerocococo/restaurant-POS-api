@@ -5,20 +5,20 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate (models) {
-      Product.belongsTo(models.Category, { foreignKey: 'categoryId' })
-      Product.hasOne(models.SoldProduct, { onDelete: 'SET DEFAULT', onUpdate: 'CASCADE' })
+      Product.belongsTo(models.Category, {
+        foreignKey: 'categoryId',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+      })
+      Product.hasOne(models.SoldProduct, {
+        foreignKey: 'productId',
+        onDelete: 'SET DEFAULT',
+        onUpdate: 'CASCADE'
+      })
     }
   }
   Product.init({
-    categoryId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Category',
-        key: 'id'
-      },
-      onDelete: 'SET NULL',
-      onUpdate: 'CASCADE'
-    },
+    categoryId: DataTypes.INTEGER,
     name: {
       allowNull: false,
       type: DataTypes.STRING
