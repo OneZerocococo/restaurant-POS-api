@@ -25,16 +25,19 @@ const orderController = {
         },
         raw: true
       })
+      if (!order) throw new Error('該桌無未結帳訂單!')
+      // 取得訂單內容
       const soldProducts = await SoldProduct.findAll({
         where: {
           orderId: order.id
         },
-        include: [Product],
+        attributes: ['productId', 'count'],
+        include: [{ model: Product, attributes: ['name', 'price'] }],
         raw: true,
         nest: true
       })
       // 算訂單總額
-      const priceByProduct = soldProducts.map(product => product.count * product.Product.price)
+      const priceByProduct = soldProducts.map(p => p.count * p.Product.price)
       const totalPrice = priceByProduct.reduce((a, c) => a + c, 0)
       order.totalPrice = totalPrice
       await Order.update(
@@ -44,6 +47,7 @@ const orderController = {
       const updateData = await Order.findByPk(order.id, {
         raw: true
       })
+      updateData.soldProducts = soldProducts
       res.status(200).json(updateData)
     } catch (err) {
       next(err)
