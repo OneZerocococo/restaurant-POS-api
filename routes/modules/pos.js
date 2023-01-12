@@ -22,6 +22,6 @@ router.post('/orders/:table_id', authenticated, orderController.setOrder)
 // 編輯基本設定
 router.put('/settings', authenticated, posController.editSettings)
 // 取得基本設定
-router.get('/settings', authenticated, posController.getSettings)
+router.get('/settings', posController.getSettings)
 
 module.exports = router
