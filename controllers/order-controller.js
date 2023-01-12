@@ -5,6 +5,9 @@ const orderController = {
   setOrder: async (req, res, next) => {
     try {
       const tableId = req.params.table_id
+      // 若已經開桌有單號未結帳，禁止再次開桌
+      const isOrdered = await Order.findOne({ where: { tableId, isPaid: false } })
+      if (isOrdered) throw new Error('該桌已有人')
       const { adultNum, childrenNum } = req.body
       const table = await Table.findByPk(tableId)
       if (!table) throw new Error('桌號不存在')

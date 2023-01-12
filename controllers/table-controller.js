@@ -1,4 +1,4 @@
-const { Table } = require('../models')
+const { Table, Order } = require('../models')
 
 const tableController = {
   // 取得所有桌號
@@ -8,7 +8,18 @@ const tableController = {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         },
-        raw: true
+        include: [
+          {
+            model: Order,
+            attributes: ['id'],
+            required: false,
+            where: {
+              isPaid: false
+            }
+          }
+        ],
+        raw: true,
+        nest: true
       })
       res.status(200).json(tables)
     } catch (err) {
