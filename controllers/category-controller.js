@@ -58,9 +58,9 @@ const categoryController = {
       if (categoryId !== '0') {
         const classifiedProducts = await Product.findAll({
           where: { categoryId },
-          include: [Category],
+          include: [{ model: Category, attributes: ['id', 'name'] }],
           attributes: {
-            exclude: ['cost', 'createdAt', 'updatedAt']
+            exclude: ['createdAt', 'updatedAt']
           },
           raw: true,
           nest: true
@@ -71,7 +71,7 @@ const categoryController = {
         const products = await Product.findAll({
           where: { categoryId: null },
           attributes: {
-            exclude: ['cost', 'createdAt', 'updatedAt']
+            exclude: ['createdAt', 'updatedAt']
           },
           raw: true
         })
