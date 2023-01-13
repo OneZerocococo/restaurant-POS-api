@@ -19,7 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     productId: {
       type: DataTypes.INTEGER
     },
-    count: DataTypes.INTEGER
+    count: DataTypes.INTEGER,
+    sellingPrice: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'SoldProduct',
