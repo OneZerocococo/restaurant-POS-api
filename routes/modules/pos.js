@@ -17,6 +17,8 @@ router.put('/products/:id', authenticated, upload.fields([{ name: 'image', maxCo
 router.put('/tables/:id', authenticated, tableController.editTable)
 // 取得所有桌號
 router.get('/tables', authenticated, tableController.getTables)
+// POS送出訂單
+router.put('/orders/:table_id/:order_id', authenticated, posController.posSubmitOrder)
 // 開桌設定人數
 router.post('/orders/:table_id', authenticated, orderController.setOrder)
 // 編輯基本設定

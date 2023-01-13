@@ -76,7 +76,6 @@ const orderController = {
       await SoldProduct.bulkCreate(orderedProducts)
       await Order.update({ totalPrice }, { where: { id: orderId } })
       const orderData = await SoldProduct.findAll({ where: { orderId }, raw: true })
-      console.log(orderData)
       if (!orderData) throw new Error('送出失敗')
       res.status(200).json(orderData)
     } catch (err) {
