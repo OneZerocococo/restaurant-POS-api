@@ -20,8 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     adultNum: DataTypes.INTEGER,
     childrenNum: DataTypes.INTEGER,
     totalPrice: DataTypes.INTEGER,
-    isPaid: DataTypes.BOOLEAN
-  }, {
+    isPaid: DataTypes.BOOLEAN,
+    isFinished: DataTypes.BOOLEAN
+  },
+  {
     sequelize,
     modelName: 'Order',
     tableName: 'Orders',

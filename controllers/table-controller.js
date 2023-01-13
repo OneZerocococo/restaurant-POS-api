@@ -11,10 +11,10 @@ const tableController = {
         include: [
           {
             model: Order,
-            attributes: ['id'],
+            attributes: ['id', 'totalPrice', 'isPaid', 'isFinished'],
             required: false,
             where: {
-              isPaid: false
+              isFinished: false
             }
           }
         ],
