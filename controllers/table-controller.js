@@ -8,6 +8,7 @@ const tableController = {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         },
+        order: ['id'],
         include: [
           {
             model: Order,
