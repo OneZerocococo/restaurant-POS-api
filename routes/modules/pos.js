@@ -21,6 +21,8 @@ router.get('/tables', authenticated, tableController.getTables)
 router.put('/orders/:table_id/:order_id', authenticated, posController.posSubmitOrder)
 // 開桌設定人數
 router.post('/orders/:table_id', authenticated, orderController.setOrder)
+// 結帳
+router.patch('/orders/:id', authenticated, posController.payOrder)
 // 編輯基本設定
 router.put('/settings', authenticated, posController.editSettings)
 // 取得基本設定

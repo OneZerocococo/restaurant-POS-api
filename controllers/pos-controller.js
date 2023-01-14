@@ -80,6 +80,21 @@ const posController = {
     } catch (err) {
       next(err)
     }
+  },
+  // 結帳
+  payOrder: async (req, res, next) => {
+    try {
+      const orderId = req.params.id
+      const order = await Order.findByPk(orderId)
+      if (!order) throw new Error('not found this order')
+      if (order.isPaid === true) throw new Error('This order already paid!')
+      const isPaid = await order.update({ isPaid: true })
+      if (!isPaid) throw new Error('paid fail')
+      const finalOrder = await Order.findByPk(orderId, { attributes: { exclude: ['createdAt', 'updatedAt'] }, raw: true })
+      res.status(200).json(finalOrder)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
