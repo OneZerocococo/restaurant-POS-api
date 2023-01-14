@@ -95,6 +95,22 @@ const posController = {
     } catch (err) {
       next(err)
     }
+  },
+  // 完成訂單
+  finishOrder: async (req, res, next) => {
+    try {
+      const orderId = req.params.id
+      const order = await Order.findByPk(orderId)
+      if (!order) throw new Error('not found this order')
+      if (order.isFinished === true) throw new Error('This order already finished!')
+      if (order.isPaid === false) throw new Error('This order should be paid!')
+      const isFinished = await order.update({ isFinished: true })
+      if (!isFinished) throw new Error('finish order fail')
+      const finalOrder = await Order.findByPk(orderId, { attributes: { exclude: ['createdAt', 'updatedAt'] }, raw: true })
+      res.status(200).json(finalOrder)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 

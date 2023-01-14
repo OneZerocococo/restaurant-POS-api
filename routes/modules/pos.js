@@ -23,6 +23,8 @@ router.put('/orders/:table_id/:order_id', authenticated, posController.posSubmit
 router.post('/orders/:table_id', authenticated, orderController.setOrder)
 // 結帳
 router.patch('/orders/:id', authenticated, posController.payOrder)
+// 完成訂單(客人離席)
+router.patch('/finishorder/:id', authenticated, posController.finishOrder)
 // 編輯基本設定
 router.put('/settings', authenticated, posController.editSettings)
 // 取得基本設定
