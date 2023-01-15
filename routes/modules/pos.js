@@ -21,6 +21,8 @@ router.get('/tables', authenticated, tableController.getTables)
 router.put('/orders/:table_id/:order_id', authenticated, posController.posSubmitOrder)
 // 開桌設定人數
 router.post('/orders/:table_id', authenticated, orderController.setOrder)
+// 更改桌子人數
+router.put('/orders/:table_id', authenticated, orderController.updatePeopleNum)
 // 結帳
 router.patch('/orders/:id', authenticated, posController.payOrder)
 // 完成訂單(客人離席)

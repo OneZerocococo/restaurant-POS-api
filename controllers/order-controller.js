@@ -18,6 +18,24 @@ const orderController = {
       next(err)
     }
   },
+  // 更新桌子人數
+  updatePeopleNum: async (req, res, next) => {
+    try {
+      const tableId = req.params.table_id
+      const table = await Table.findByPk(tableId)
+      if (!table) throw new Error('桌號不存在')
+      const order = await Order.findOne({
+        where: { tableId, isPaid: false, isFinished: false },
+        attributes: { exclude: ['totalPrice', 'isPaid', 'isFinished'] }
+      })
+      if (!order) throw new Error('尚未開桌!')
+      const { adultNum, childrenNum } = req.body
+      const newOrder = await order.update({ adultNum, childrenNum })
+      res.status(200).json(newOrder)
+    } catch (err) {
+      next(err)
+    }
+  },
   // 取得單一桌號未結帳訂單
   getOrderByTable: async (req, res, next) => {
     try {

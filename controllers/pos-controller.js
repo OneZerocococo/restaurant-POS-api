@@ -88,6 +88,11 @@ const posController = {
       const order = await Order.findByPk(orderId)
       if (!order) throw new Error('not found this order')
       if (order.isPaid === true) throw new Error('This order already paid!')
+      // 先算低消
+      // 取得大人均低消金額
+      const settings = await Setting.findOne({ raw: true })
+      const minCharge = Number(settings.minCharge)
+      if (order.totalPrice / Number(order.adultNum) < minCharge) throw new Error('未達低消!')
       const isPaid = await order.update({ isPaid: true })
       if (!isPaid) throw new Error('paid fail')
       const finalOrder = await Order.findByPk(orderId, { attributes: { exclude: ['createdAt', 'updatedAt'] }, raw: true })
