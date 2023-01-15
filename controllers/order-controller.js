@@ -49,7 +49,9 @@ const orderController = {
         { where: { id: order.id } }
       )
       const updateData = await Order.findByPk(order.id, {
-        raw: true
+        include: [{ model: Table, attributes: ['name'] }],
+        raw: true,
+        nest: true
       })
       updateData.soldProducts = soldProducts
       res.status(200).json(updateData)
