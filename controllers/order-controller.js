@@ -1,4 +1,4 @@
-const { Order, Table, SoldProduct, Product, Setting } = require('../models')
+const { Order, Table, SoldProduct, Product } = require('../models')
 
 const orderController = {
   // 開桌設定人數
@@ -77,27 +77,27 @@ const orderController = {
       next(err)
     }
   },
-  // 顧客送出訂單
-  customerOrder: async (req, res, next) => {
+  // 送出訂單
+  SubmitOrder: async (req, res, next) => {
     try {
-      const tableId = Number(req.params.table_id)
       const orderId = Number(req.params.order_id)
-      // 取得訂單內容，需計算低消
-      const order = await Order.findOne({ where: { tableId, id: orderId, isPaid: false } })
-      const settings = await Setting.findOne({ raw: true })
-      // 取得大人均低消金額
-      const minCharge = Number(settings.minCharge)
-      // 取得點餐內容
-      const orderedProducts = req.body
-      if (orderedProducts[0].orderId !== orderId) throw new Error('req.body or req.params.order_id is not correct!')
-      const priceByProduct = orderedProducts.map(p => p.count * p.sellingPrice)
+      const order = Order.findByPk(orderId)
+      if (!order) throw new Error('not found this order')
+      const orderData = req.body
+      const updateData = orderData.map(od => ({ ...od, orderId }))
+      const priceByProduct = updateData.map(p => p.count * p.sellingPrice)
       const totalPrice = priceByProduct.reduce((a, c) => a + c, 0)
-      if (totalPrice / Number(order.adultNum) < minCharge) throw new Error('未達低消!')
-      await SoldProduct.bulkCreate(orderedProducts)
+      await SoldProduct.destroy({ where: { orderId } })
+      await SoldProduct.bulkCreate(updateData)
       await Order.update({ totalPrice }, { where: { id: orderId } })
-      const orderData = await SoldProduct.findAll({ where: { orderId }, raw: true })
-      if (!orderData) throw new Error('送出失敗')
-      res.status(200).json(orderData)
+      const finalRecords = await SoldProduct.findAll({
+        where: { orderId },
+        attributes: {
+          exclude: ['orderId', 'createdAt', 'updatedAt']
+        },
+        raw: true
+      })
+      res.status(200).json({ orderId, totalPrice, finalRecords })
     } catch (err) {
       next(err)
     }

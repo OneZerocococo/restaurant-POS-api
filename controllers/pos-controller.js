@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { User, Setting, SoldProduct, Order } = require('../models')
+const { User, Setting, Order } = require('../models')
 
 const posController = {
   // 登入POS系統
@@ -48,35 +48,6 @@ const posController = {
       const newSettings = await Setting.findByPk(settings.id)
       const newSettingsData = await newSettings.update({ minCharge, description })
       res.status(200).json(newSettingsData)
-    } catch (err) {
-      next(err)
-    }
-  },
-  // POS送出訂單
-  posSubmitOrder: async (req, res, next) => {
-    try {
-      const tableId = Number(req.params.table_id)
-      const orderId = Number(req.params.order_id)
-      const updateData = req.body
-      // 先算低消
-      const settings = await Setting.findOne({ raw: true })
-      // 取得大人均低消金額
-      const minCharge = Number(settings.minCharge)
-      const priceByProduct = updateData.map(p => p.count * p.sellingPrice)
-      const totalPrice = priceByProduct.reduce((a, c) => a + c, 0)
-      const order = await Order.findOne({ where: { tableId, id: orderId, isPaid: false } })
-      if (totalPrice / Number(order.adultNum) < minCharge) throw new Error('未達低消!')
-      await SoldProduct.destroy({ where: { orderId } })
-      await SoldProduct.bulkCreate(updateData)
-      await Order.update({ totalPrice }, { where: { id: orderId } })
-      const finalRecords = await SoldProduct.findAll({
-        where: { orderId },
-        attributes: {
-          exclude: ['orderId', 'createdAt', 'updatedAt']
-        },
-        raw: true
-      })
-      res.status(200).json({ orderId, totalPrice, finalRecords })
     } catch (err) {
       next(err)
     }
