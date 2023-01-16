@@ -75,7 +75,9 @@ const categoryController = {
           },
           raw: true
         })
-        res.status(200).json(products)
+        const Category = { id: 0, name: '未分類' }
+        const productData = products.map(p => ({ ...p, Category }))
+        res.status(200).json(productData)
       }
     } catch (err) {
       next(err)
