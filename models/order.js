@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     childrenNum: DataTypes.INTEGER,
     totalPrice: DataTypes.INTEGER,
     isPaid: DataTypes.BOOLEAN,
-    isFinished: DataTypes.BOOLEAN
+    isFinished: DataTypes.BOOLEAN,
+    isClosed: DataTypes.BOOLEAN
   },
   {
     sequelize,
