@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   DailyRevenue.init({
     postingDate: DataTypes.DATEONLY,
-    revenue: DataTypes.INTEGER
+    revenue: DataTypes.INTEGER,
+    customerNum: DataTypes.INTEGER,
+    revenuePerCustomer: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'DailyRevenue',

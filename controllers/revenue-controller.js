@@ -46,7 +46,9 @@ const revenueController = {
       const isExisted = await DailyRevenue.findOne({ where: { postingDate } })
       if (isExisted) throw new Error('This postingDate has closed!')
       if (!lastRevenue) {
-        const dailyRevenue = await DailyRevenue.create({ postingDate, revenue })
+        const customerNum = await Order.sum('adultNum', { where: { isPaid: true, isClosed: false } })
+        const revenuePerCustomer = Math.floor(revenue / customerNum)
+        const dailyRevenue = await DailyRevenue.create({ postingDate, revenue, customerNum, revenuePerCustomer })
         await Order.update({ isClosed: true }, {
           where: {
             isPaid: true,
@@ -55,8 +57,16 @@ const revenueController = {
         })
         res.status(200).json(dailyRevenue)
       } else {
-        const dailyRevenue = await DailyRevenue.create({ postingDate, revenue })
         const startDate = lastRevenue.createdAt
+        const customerNum = await Order.sum('adultNum', {
+          where: {
+            isPaid: true,
+            isClosed: false,
+            createdAt: { [Op.gte]: startDate }
+          }
+        })
+        const revenuePerCustomer = Math.floor(revenue / customerNum)
+        const dailyRevenue = await DailyRevenue.create({ postingDate, revenue, customerNum, revenuePerCustomer })
         await Order.update({ isClosed: true }, {
           where: {
             isPaid: true,
