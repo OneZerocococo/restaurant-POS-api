@@ -37,7 +37,7 @@ const productController = {
       if (!name || name.length > 20) throw new Error('請輸入20字以內')
       const image = await imgurFileHandler(files?.image && files.image[0])
       const updatedProduct = await product.update({
-        categoryId,
+        categoryId: categoryId || null,
         name,
         nameEn,
         description,
