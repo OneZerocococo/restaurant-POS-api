@@ -1,5 +1,6 @@
 const { Op } = require('sequelize')
 const { Order, DailyRevenue } = require('../models')
+const moment = require('moment')
 
 const revenueController = {
   // 取得系統金額(尚未關帳的營收)
@@ -19,7 +20,6 @@ const revenueController = {
         res.status(200).json({ UnsettledRevenue: revenue })
       } else {
         const startDate = lastRevenue.createdAt
-        console.log(startDate)
         const revenue = await Order.sum('totalPrice', {
           where: {
             isPaid: true,
@@ -65,7 +65,7 @@ const revenueController = {
             createdAt: { [Op.gte]: startDate }
           }
         })
-        const revenuePerCustomer = Math.floor(revenue / customerNum)
+        const revenuePerCustomer = Number((revenue / customerNum).toFixed())
         const dailyRevenue = await DailyRevenue.create({ postingDate, revenue, customerNum, revenuePerCustomer })
         await Order.update({ isClosed: true }, {
           where: {
@@ -81,6 +81,22 @@ const revenueController = {
     } catch (err) {
       next(err)
     }
+  },
+  // 取得月營收
+  getRevenueByMonth: async (req, res, next) => {
+    const { startDate, endDate } = req.body
+    const sDate = moment(startDate).format('YYYY-MM-DD')
+    const eDate = moment(endDate).format('YYYY-MM-DD')
+    const data = await DailyRevenue.findAll({
+      attributes: ['postingDate', 'revenue', 'customerNum', 'revenuePerCustomer'],
+      where: {
+        postingDate: {
+          [Op.between]: [sDate, eDate]
+        }
+      },
+      raw: true
+    })
+    res.status(200).json(data)
   }
 }
 

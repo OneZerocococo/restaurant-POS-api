@@ -7,5 +7,7 @@ const { authenticated } = require('../../middleware/auth')
 router.post('/closedailyrevenue', authenticated, revenueController.closeDailyRevenue)
 // 取得未結算營收(系統金額)
 router.get('/unsettledrevenue', authenticated, revenueController.getUnsettledRevenue)
+// 取得月營收
+router.get('/', authenticated, revenueController.getRevenueByMonth)
 
 module.exports = router
