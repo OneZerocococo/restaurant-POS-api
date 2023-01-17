@@ -14,12 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Order.init({
-    tableId: {
-      type: DataTypes.INTEGER
-    },
+    tableId: DataTypes.INTEGER,
     adultNum: DataTypes.INTEGER,
     childrenNum: DataTypes.INTEGER,
-    totalPrice: DataTypes.INTEGER,
+    totalPrice: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
     isPaid: DataTypes.BOOLEAN,
     isFinished: DataTypes.BOOLEAN,
     isClosed: DataTypes.BOOLEAN

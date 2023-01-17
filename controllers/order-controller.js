@@ -81,8 +81,12 @@ const orderController = {
   SubmitOrder: async (req, res, next) => {
     try {
       const orderId = Number(req.params.order_id)
-      const order = Order.findByPk(orderId)
+      const order = await Order.findByPk(orderId, { raw: true })
+      console.log(order)
+      console.log(order.isPaid)
       if (!order) throw new Error('not found this order')
+      // 禁止已結帳訂單被修改
+      if (order.isPaid) throw new Error('This order is paid!')
       const orderData = req.body
       const updateData = orderData.map(od => ({ ...od, orderId }))
       const priceByProduct = updateData.map(p => p.count * p.sellingPrice)
