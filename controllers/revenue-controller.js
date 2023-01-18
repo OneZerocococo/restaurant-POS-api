@@ -84,24 +84,28 @@ const revenueController = {
   },
   // 取得月營收
   getRevenueByMonth: async (req, res, next) => {
-    const { startDate, endDate } = req.body
-    const sDate = moment(startDate).format('YYYY-MM-DD')
-    const eDate = moment(endDate).format('YYYY-MM-DD')
-    const data = await DailyRevenue.findAll({
-      attributes: ['postingDate', 'revenue', 'customerNum', 'revenuePerCustomer'],
-      where: {
-        postingDate: {
-          [Op.between]: [sDate, eDate]
-        }
-      },
-      raw: true
-    })
-    res.status(200).json(data)
+    try {
+      const { startDate, endDate } = req.query
+      const sDate = moment(startDate).format('YYYY-MM-DD')
+      const eDate = moment(endDate).format('YYYY-MM-DD')
+      const data = await DailyRevenue.findAll({
+        attributes: ['postingDate', 'revenue', 'customerNum', 'revenuePerCustomer'],
+        where: {
+          postingDate: {
+            [Op.between]: [sDate, eDate]
+          }
+        },
+        raw: true
+      })
+      res.status(200).json(data)
+    } catch (err) {
+      next(err)
+    }
   },
   // 取得銷售排行
   getSalesRank: async (req, res, next) => {
     try {
-      const { startDate, endDate } = req.body
+      const { startDate, endDate } = req.query
       const sDate = moment.utc(startDate, 'YYYY-MM-DD').add(8, 'hours').format()
       const eDate = moment.utc(endDate, 'YYYY-MM-DD').add(1, 'days').add(8, 'hours').format()
       const salesData = await SoldProduct.findAll({
