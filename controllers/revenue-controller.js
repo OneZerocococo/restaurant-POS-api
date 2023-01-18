@@ -1,5 +1,5 @@
 const { Op } = require('sequelize')
-const { Order, DailyRevenue } = require('../models')
+const { Order, DailyRevenue, SoldProduct, Product, sequelize } = require('../models')
 const moment = require('moment')
 
 const revenueController = {
@@ -97,6 +97,32 @@ const revenueController = {
       raw: true
     })
     res.status(200).json(data)
+  },
+  // 取得銷售排行
+  getSalesRank: async (req, res, next) => {
+    try {
+      const { startDate, endDate } = req.body
+      const sDate = moment.utc(startDate, 'YYYY-MM-DD').add(8, 'hours').format()
+      const eDate = moment.utc(endDate, 'YYYY-MM-DD').add(1, 'days').add(8, 'hours').format()
+      const salesData = await SoldProduct.findAll({
+        attributes: ['product_id', [sequelize.fn('SUM', sequelize.col('count')), 'counts']],
+        where: {
+          createdAt: {
+            [Op.gte]: sDate,
+            [Op.lt]: eDate
+          }
+        },
+        include: {
+          model: Product,
+          attributes: ['name']
+        },
+        group: ['product_id'],
+        order: [['counts', 'DESC']]
+      })
+      res.status(200).json(salesData)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 

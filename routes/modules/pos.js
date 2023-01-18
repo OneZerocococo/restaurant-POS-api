@@ -6,6 +6,7 @@ const productController = require('../../controllers/product-controller')
 const orderController = require('../../controllers/order-controller')
 const { authenticated } = require('../../middleware/auth')
 const upload = require('../../middleware/multer')
+const revenueController = require('../../controllers/revenue-controller')
 
 // login
 router.post('/login', posController.login)
@@ -29,5 +30,7 @@ router.patch('/finishorder/:id', authenticated, posController.finishOrder)
 router.put('/settings', authenticated, posController.editSettings)
 // 取得基本設定
 router.get('/settings', posController.getSettings)
+// 取得銷售報表
+router.get('/sales_ranking', authenticated, revenueController.getSalesRank)
 
 module.exports = router
