@@ -39,10 +39,11 @@ const orderController = {
   // 取得單一桌號未結帳訂單
   getOrderByTable: async (req, res, next) => {
     try {
-      const tableId = req.params.table_id
+      const tableName = req.params.table_name
+      const table = await Table.findOne({ where: { name: tableName }, raw: true })
       const order = await Order.findOne({
         where: {
-          tableId,
+          tableId: table.id,
           isPaid: false
         },
         raw: true
