@@ -31,11 +31,12 @@ const tableController = {
   editTable: async (req, res, next) => {
     try {
       const tableId = req.params.id
-      const { name } = req.body
+      const { name, isValid } = req.body
+      if (!isValid) throw new Error('isValid is requried!')
       if (!name.trim()) throw new Error('內容不可空白')
       const table = await Table.findByPk(tableId)
       if (!table) throw new Error('桌號不存在')
-      const editedTable = await table.update({ name })
+      const editedTable = await table.update({ name, isValid })
       const tableData = editedTable.toJSON()
       res.status(200).json(tableData)
     } catch (err) {

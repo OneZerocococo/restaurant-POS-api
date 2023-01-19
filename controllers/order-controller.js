@@ -5,12 +5,14 @@ const orderController = {
   setOrder: async (req, res, next) => {
     try {
       const tableId = req.params.table_id
+      // 桌子不存在、狀態無效，不可開桌
+      const table = await Table.findByPk(tableId)
+      if (!table) throw new Error('桌號不存在')
+      if (!table.isValid) throw new Error('無效桌號不可開桌')
       // 若已經開桌有單號未結帳，禁止再次開桌
       const isOrdered = await Order.findOne({ where: { tableId, isPaid: false } })
       if (isOrdered) throw new Error('該桌已有人')
       const { adultNum, childrenNum } = req.body
-      const table = await Table.findByPk(tableId)
-      if (!table) throw new Error('桌號不存在')
       const newOrder = await Order.create({ tableId, adultNum, childrenNum })
       const data = newOrder.toJSON()
       res.status(200).json(data)
