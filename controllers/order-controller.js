@@ -82,8 +82,6 @@ const orderController = {
     try {
       const orderId = Number(req.params.order_id)
       const order = await Order.findByPk(orderId, { raw: true })
-      console.log(order)
-      console.log(order.isPaid)
       if (!order) throw new Error('not found this order')
       // 禁止已結帳訂單被修改
       if (order.isPaid) throw new Error('This order is paid!')
