@@ -8,7 +8,7 @@ const productController = {
       if (!name || !price) throw new Error('請輸入名稱和價格!')
       const { files } = req
       if (description?.lengt > 100 || nameEn?.length > 100) throw new Error('請輸入100字以內')
-      if (!name || name.length > 20) throw new Error('請輸入20字以內')
+      if (name.length > 25) throw new Error('請輸入25字以內')
       const image = await imgurFileHandler(files?.image && files.image[0])
       const createdProduct = await Product.create({
         categoryId,
@@ -34,7 +34,7 @@ const productController = {
       if (!name || !price) throw new Error('請輸入名稱和價格!')
       const { files } = req
       if (description?.length > 100 || nameEn?.length > 100) throw new Error('請輸入100字以內')
-      if (!name || name.length > 20) throw new Error('請輸入20字以內')
+      if (name.length > 25) throw new Error('請輸入25字以內')
       const image = await imgurFileHandler(files?.image && files.image[0])
       const updatedProduct = await product.update({
         categoryId: categoryId || null,
