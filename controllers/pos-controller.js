@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { User, Setting, Order } = require('../models')
+const moment = require('moment')
+const { Op } = require('sequelize')
 
 const posController = {
   // 登入POS系統
@@ -84,6 +86,35 @@ const posController = {
       if (!isFinished) throw new Error('finish order fail')
       const finalOrder = await Order.findByPk(orderId, { attributes: { exclude: ['createdAt', 'updatedAt'] }, raw: true })
       res.status(200).json(finalOrder)
+    } catch (err) {
+      next(err)
+    }
+  },
+  getOrders: async (req, res, next) => {
+    try {
+      const page = Number(req.query.page) || 1
+      const limit = 10
+      const offset = (page - 1) * limit
+      const date = req.params.date
+      const sDate = moment.utc(date, 'YYYY-MM-DD').subtract(8, 'hours').format()
+      const eDate = moment.utc(date, 'YYYY-MM-DD').add(16, 'hours').format()
+      const orders = await Order.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: sDate,
+            [Op.lt]: eDate
+          }
+        },
+        attributes: ['id', 'adultNum', 'childrenNum', 'totalPrice', 'createdAt'],
+        order: [['createdAt', 'DESC']],
+        limit,
+        offset,
+        raw: true
+      })
+      orders.forEach(order => {
+        order.createdAt = moment.utc(order.createdAt).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
+      })
+      res.status(200).json(orders)
     } catch (err) {
       next(err)
     }
