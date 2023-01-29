@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { User, Setting, Order } = require('../models')
+const { User, Setting, Order, SoldProduct, Product, Table } = require('../models')
 const moment = require('moment')
 const { Op } = require('sequelize')
 
@@ -90,6 +90,32 @@ const posController = {
       next(err)
     }
   },
+  // POS取得單張訂單
+  getOrder: async (req, res, next) => {
+    try {
+      const orderId = req.params.id
+      const order = await Order.findByPk(orderId, {
+        attributes: ['id', 'tableId', 'adultNum', 'childrenNum', 'totalPrice', 'createdAt'],
+        include: [{ model: Table, attributes: ['name'] }],
+        raw: true,
+        nest: true
+      })
+      if (!order) throw new Error('not found this order')
+      const soldProducts = await SoldProduct.findAll({
+        where: { orderId },
+        attributes: ['productId', 'count', 'sellingPrice'],
+        include: [{ model: Product, attributes: ['name'] }],
+        raw: true,
+        nest: true
+      })
+      order.createdAt = moment.utc(order.createdAt).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
+      order.soldProducts = soldProducts
+      res.status(200).json(order)
+    } catch (err) {
+      next(err)
+    }
+  },
+  // POS取得所有訂單
   getOrders: async (req, res, next) => {
     try {
       const page = Number(req.query.page) || 1

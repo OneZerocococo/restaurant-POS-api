@@ -22,8 +22,10 @@ router.get('/tables', authenticated, tableController.getTables)
 router.post('/orders/:table_id', authenticated, orderController.setOrder)
 // 更改桌子人數
 router.put('/orders/:table_id', authenticated, orderController.updatePeopleNum)
-// 取得所有訂單
+// 取得單日所有訂單
 router.get('/orders/:date', authenticated, posController.getOrders)
+// 取得單一訂單
+router.get('/order/:id', authenticated, posController.getOrder)
 // 結帳
 router.patch('/orders/:id', authenticated, posController.payOrder)
 // 完成訂單(客人離席)
