@@ -5,7 +5,6 @@ imgur.setClientId(IMGUR_CLIENT_ID)
 
 const imgurFileHandler = file => {
   return new Promise((resolve, reject) => {
-    console.log(file)
     if (!file) return resolve(null)
     return imgur.uploadFile(file.path)
       .then(img => resolve(img?.link || null))
