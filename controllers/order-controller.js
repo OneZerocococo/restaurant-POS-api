@@ -102,6 +102,8 @@ const orderController = {
         },
         raw: true
       })
+      const socketData = { orderId, tableId: order.tableId }
+      io.emit('ordered', socketData)
       res.status(200).json({ orderId, totalPrice, finalRecords })
     } catch (err) {
       next(err)
