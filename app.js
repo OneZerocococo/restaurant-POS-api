@@ -22,7 +22,11 @@ app.use(express.json())
 app.use(methodOverride('_method'))
 app.use(passport.initialize())
 app.use('/api', routes)
-
+io.on('connection', socket => {
+  socket.on('error', () => {
+    socket.emit('fail connecting', 'Socket connected failed.')
+  })
+})
 global.io = io
 
 server.listen(port, () => {
