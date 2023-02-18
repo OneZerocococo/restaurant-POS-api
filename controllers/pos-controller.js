@@ -1,8 +1,13 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { User, Setting, Order, SoldProduct, Product, Table } = require('../models')
-const moment = require('moment')
+const dayjs = require('dayjs')
+const utc = require('dayjs/plugin/utc')
+const timezone = require('dayjs/plugin/timezone')
 const { Op } = require('sequelize')
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const posController = {
   // 登入POS系統
@@ -108,7 +113,7 @@ const posController = {
         raw: true,
         nest: true
       })
-      order.createdAt = moment.utc(order.createdAt).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
+      order.createdAt = dayjs.utc(order.createdAt).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
       order.soldProducts = soldProducts
       res.status(200).json(order)
     } catch (err) {
@@ -122,8 +127,8 @@ const posController = {
       const limit = 10
       const offset = (page - 1) * limit
       const date = req.params.date
-      const sDate = moment.utc(date, 'YYYY-MM-DD').subtract(8, 'hours').format()
-      const eDate = moment.utc(date, 'YYYY-MM-DD').add(16, 'hours').format()
+      const sDate = dayjs.utc(date, 'YYYY-MM-DD').subtract(8, 'hours').format()
+      const eDate = dayjs.utc(date, 'YYYY-MM-DD').add(16, 'hours').format()
       const orders = await Order.findAll({
         where: {
           createdAt: {
@@ -138,7 +143,7 @@ const posController = {
         raw: true
       })
       orders.forEach(order => {
-        order.createdAt = moment.utc(order.createdAt).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
+        order.createdAt = dayjs.utc(order.createdAt).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
       })
       res.status(200).json(orders)
     } catch (err) {
