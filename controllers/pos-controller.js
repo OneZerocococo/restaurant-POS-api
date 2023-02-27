@@ -134,6 +134,9 @@ const posController = {
           createdAt: {
             [Op.gte]: sDate,
             [Op.lt]: eDate
+          },
+          totalPrice: {
+            [Op.gt]: 0
           }
         },
         attributes: ['id', 'adultNum', 'childrenNum', 'totalPrice', 'createdAt'],
